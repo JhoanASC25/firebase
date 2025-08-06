@@ -16,6 +16,10 @@ const username = document.getElementById('username');
 const message = document.getElementById('message');
 const submitButton = document.getElementById('send-btn')
 
+const email = document.getElementById('email')
+
+
+
 submitButton.onclick = updateDB;
 
 /**
@@ -31,16 +35,29 @@ submitButton.onclick = updateDB;
 
 function updateDB(event) {
   event.preventDefault()
-  let data = {
+
+  if(username.value == ''){
+    alert('please insert a username')
+  }else{
+    const date = new Date();
+    let dateString = '' + (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
+     let timeString = ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+    
+    let data = {
     "username" : username.value,
-    "message": message.value
-  }
+    "email":email.value,
+    "message": message.value,
+    "time" : timeString,
+    "date": dateString
+    }
 
   console.log(data)
 
   database.push(data);
 
   message.value = "";
+  }
+ 
   // Prevent default refresh
   // Create data object
   // console.log the object
@@ -73,7 +90,7 @@ function addMessageToBoard(rowData) {
   let data = rowData.val();
   console.log(data)
   
-  let singleMessage = makeSingleMessageHTML(data.username, data.message)
+  let singleMessage = makeSingleMessageHTML(data.username, data.message, data.email, data.date, data.time)
 
   messageDiv.appendChild(singleMessage);
 
@@ -102,7 +119,7 @@ function addMessageToBoard(rowData) {
  *      - returns the parent div
  */
 
-function makeSingleMessageHTML(usernameTxt, messageTxt) {
+function makeSingleMessageHTML(usernameTxt, emailTxt, messageTxt, dateTxt, timeTxt ) {
   // Create Parent Div
   let parentDiv = document.createElement('div');
   // Add Class name .single-message
@@ -115,12 +132,29 @@ function makeSingleMessageHTML(usernameTxt, messageTxt) {
   parentDiv.append(usernameP);
   // Create message P Tag
   let messageP = document.createElement('p');
-  messageP.innerHTML = messageTxt;
-  parentDiv.append(messageP)
+  messageP.innerHTML = messageTxt;;
+  parentDiv.append(messageP);
+  // create email
+  let emailp = document.createElement('p');
+  emailp.innerHTML = emailTxt;
+  parentDiv.append(emailp);
+  //date
+    let date = document.createElement('p');
+  date.innerHTML = dateTxt;
+  parentDiv.append(dateTxt);
+  //Time
+  let time = document.createElement('p');
+  time.innerHTML = timeTxt;
+  parentDiv.append(timeTxt);
   // Return Parent Div
   return parentDiv;
 }
-
+/*
+function datetime(date, time){
+    //use old parent div in makeSingleMessageHTML
+    let date = 
+}
+*/
 /**
  * @BONUS add an onkeyup event handler to the form HTML
  * element so the user can also submit the form with the
